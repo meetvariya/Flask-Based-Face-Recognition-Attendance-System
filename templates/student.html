@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+
+
+    <title>Student profile</title>
+
+  </head>
+  <style>
+     html {
+   margin: 0px;
+   height: 100%;
+   width: 100%;
+}
+  body{
+background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+      }</style>
+  <body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Attendance System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" aria-current="page" href="/home">Home</a>
+          <a class="nav-link" href="/about">About</a>
+          <a class="nav-link" href="/show">Profile</a>
+          <!-- <a class="nav-link active" href="#">Login</a> -->
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <center><h1>welcome-{{username}}-you'r loggedin</h1></center><br><br>
+
+  <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mymodal">
+    View Details</button></center>
+
+<!-- Modal -->
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Your Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+            <dl>
+            <dt>Username:</dt>
+            <dd>{{data[0]}}</dd>
+
+            <dt>Batch:</dt>
+            <dd>{{data[1]}}</dd>
+
+            <dt>mail id:</dt>
+            <dd>{{data[2]}}</dd>
+
+            <dt>Dob:</dt>
+            <dd>{{data[3]}}</dd>
+
+
+             </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><br><br>
+
+
+  <center><a href="/studentupdate/{{data[0]}}" class="btn btn-primary" data-toggle="modal" data-target="#modaledit{{data[0]}}">Edit Details</a></center>
+
+<div id="modaledit{{data[0]}}" class="modal fade" role="dialog">
+
+
+   <div class="modal-dialog">
+
+      <div class="modal-content">
+
+         <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <h4 class="modal-title">Update Information</h4>
+
+         </div>
+
+         <div class="modal-body">
+
+            <form action="{{url_for('studentupdate')}}" method="POST">
+
+               <div class="form-group">
+
+                   <input type="hidden"  name="username" value="{{data[0]}}">
+
+                    <input type="hidden" placeholder="Enter Batch" name="batch" value="{{ data[1] }}" required>
+
+               </div>
+               <div class="form-group">
+
+                  <label ><b>Email id:</b></label>
+                  <input type="email" placeholder="Enter Email" name="emailid" value="{{ data[2] }}"required>
+
+               </div>
+                <div class="form-group">
+                <label><b>Dob:</b></label>
+                <input type="date" placeholder="Enter DOB" name="dob" value="{{ data[3] }}"required>
+                </div>
+
+               <div class="form-group">
+
+                  <button class="btn btn-primary" type="submit">Update</button>
+
+               </div>
+
+            </form>
+
+         </div>
+
+         <div class="modal-footer">
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div><br><br>
+
+
+
+  <center><button class="btn btn-danger" onclick="openpasswordform()" >Change Password</button></center><br>
+  <center><div class="form-popup" id="passwordform" style="display:none">
+    <form action="{{url_for('studentchangepassword')}}" class="form-container" method="post" >
+    <fieldset>
+
+        <input type="password" name="password" placeholder="Password" id="password" required>
+        <input type="password" placeholder="Confirm Password" id="confirm_password" required>
+
+        <button type="submit" class="btn btn-success">change password</button>
+        <button type="button" class="btn cancel,btn btn-secondary" onclick="closepasswordform()">Close</button>
+    </fieldset>
+    </form>
+  </div></center>
+
+
+
+
+  </body>
+<script>
+
+
+  function openpasswordform() {
+    document.getElementById("passwordform").style.display = "block";
+  }
+
+  function closepasswordform() {
+    document.getElementById("passwordform").style.display = "none";
+  }
+
+
+      var password = document.getElementById("password")
+      , confirm_password = document.getElementById("confirm_password");
+
+    function validatePassword(){
+      if(password.value != confirm_password.value) {
+        confirm_password.setCustomValidity("Passwords Don't Match");
+      } else {
+        confirm_password.setCustomValidity('');
+      }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+
+<!--    var blob = new Blob([{{data[4]}}], {type: 'image/jpg'});-->
+<!--    var image = document.getElementById('displayimage1');-->
+<!--    image.src = URL.createObjectURL(blob);-->
+
+
+  </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</html>

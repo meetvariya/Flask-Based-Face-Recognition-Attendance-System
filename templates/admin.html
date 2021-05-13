@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<!--    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='login.css') }}">-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='editform.css') }}">
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <title>Admin profile</title>
+    <style>
+    html {
+   margin: 0px;
+   height: 100%;
+   width: 100%;
+}
+     body{
+background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+
+      }
+    </style>
+  </head>
+  <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Attendance System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" aria-current="page" href="/home">Home</a>
+          <a class="nav-link" href="/about">About</a>
+          <a class="nav-link" href="/show">Profile</a>
+<!--            <a class="nav-link active" href="#">Login</a> -->
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <center><h1>Welcome Admin </h1></center>
+              <center><button class="btn btn-danger" onclick="openstudentform()" >Students details</button></center>
+
+              <div class="form-popup" id="student" style="display:none">
+               <h2>Student List <button type="button" class="btn btn-success " onclick="openinsertform()" >Add Student Data</button></h2>
+
+              <div class="form-popup edit-popup" id="insertform">
+                <form action="{{url_for('insert')}}" class="form-container" enctype="multipart/form-data" method="post" >
+                  <label><b>Username:</b></label>
+                    <input type="text" placeholder="Enter Username" class="input-sm" name="username" >
+                  <label ><b>Email id:</b></label>
+                  <input type="email" placeholder="Enter Email" name="emailid" required>
+
+                  <label ><b>Batch:</b></label>
+                  <input type="text" placeholder="Enter Batch" name="batch" class="input-sm" required>
+
+                  <label><b>Dob:</b></label>
+                  <input type="date" placeholder="Enter DOB" name="dob" required>
+                    <input type="hidden" name="password" value="123">
+                    <label><b>Upload Image:</b></label>
+                    <input type="file" enctype="multipart/form-data" name="img" required>
+
+                  <button type="submit" class="btn btn-info ">Insert</button>
+                  <button type="button" class="btn cancel" onclick="closeinsertform()">Close</button>
+                </form>
+              </div>
+              <table class="table table-striped">
+                      <tr>
+                          <th>username</th>
+                          <th>batch</th>
+                          <th>email id</th>
+                          <th>birth date</th>
+                          <th>Action</th>
+                      </tr>
+
+                   {% for row in students %}
+                <tr>
+                    <td>{{row.0}}</td>
+                    <td>{{row.1}}</td>
+                    <td>{{row.2}}</td>
+                    <td>{{row.3}}</td>
+
+                    <td>
+
+
+                <a href="/update/{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit1{{row.0}}">Edit</a>
+                <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                <a href="/resetpassword/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Reset Password?')">Reset Password</a>
+
+
+                    </td>
+
+                </tr>
+
+                <div id="modaledit1{{row.0}}" class="modal fade" role="dialog">
+
+
+   <div class="modal-dialog">
+
+      <div class="modal-content">
+
+         <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <h4 class="modal-title">Update Information</h4>
+
+         </div>
+
+         <div class="modal-body">
+
+            <form action="{{ url_for('update') }}" method="POST">
+
+               <div class="form-group">
+
+                   <input type="hidden"  name="username" value="{{row.0}}">
+                    <label> Batch:</label>
+                  <input type="text" class="form-control" name="batch" value="{{row.1}}">
+
+               </div>
+
+               <div class="form-group">
+
+                  <label>Email:</label>
+                  <input type="email" class="form-control" name="emailid" value="{{row.2}}">
+
+               </div>
+
+                <div class="form-group">
+
+                  <label>dob:</label>
+                  <input type="date" class="form-control" name="dob" value="{{row.3}}">
+
+               </div>
+
+               <div class="form-group">
+
+                  <button class="btn btn-primary" type="submit">Update</button>
+
+               </div>
+
+            </form>
+
+         </div>
+
+         <div class="modal-footer">
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+            {% endfor  %}
+
+              </table>
+              <button type="button" class="btn cancel,btn btn-secondary" onclick="closestudentform()">Close</button>
+              </div><br><br>
+
+
+
+
+
+
+
+           <center><button class="btn btn-danger" onclick="openfacultyform()" >Faculty details</button></center>
+
+              <div class="form-popup" id="faculty" style="display:none">
+               <h2>Faculty List <button type="button" class="btn btn-success " onclick="openfinsertform()" >Add Faculty Data</button></h2>
+
+              <div class="form-popup edit-popup" id="finsertform">
+                <form action="{{url_for('finsert')}}" class="form-container" method="post" >
+                  <label><b>Username:</b></label>
+                    <input type="text" placeholder="Enter Username" class="input-sm" name="username" >
+                  <label ><b>Email id:</b></label>
+                  <input type="email" placeholder="Enter Email" name="email" required>
+
+
+                  <label><b>Phone no:</b></label>
+                  <input type="text" placeholder="Enter phone no" maxlength="10" minlength="10" class="input-sm" name="phno" required>
+                    <input type="hidden" name="password" value="123">
+
+                  <button type="submit" class="btn btn-info">Insert</button>
+                  <button type="button" class="btn cancel" onclick="closefinsertform()">Close</button>
+                </form>
+              </div>
+              <table class="table table-striped">
+                      <tr>
+                          <th>username</th>
+                          <th>email id</th>
+                          <th>phone</th>
+                          <th>Action</th>
+                      </tr>
+
+                  {% for row in facultys %}
+                <tr>
+                    <td>{{row.0}}</td>
+                    <td>{{row.1}}</td>
+                    <td>{{row.2}}</td>
+                    <td>
+                <a href="/fupdate/{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit2{{row.0}}">Edit</a>
+                <a href="/fdelete/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                <a href="/fresetpassword/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Reset Password?')">Reset Password</a>
+                    </td>
+
+                </tr>
+
+                <div id="modaledit2{{row.0}}" class="modal fade" role="dialog">
+
+
+   <div class="modal-dialog">
+
+      <div class="modal-content">
+
+         <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <h4 class="modal-title">Update Information</h4>
+
+         </div>
+
+         <div class="modal-body">
+
+            <form action="{{ url_for('fupdate') }}" method="POST">
+
+               <div class="form-group">
+
+                   <input type="hidden"  name="username" value="{{row.0}}">
+                    <label> Email:</label>
+                  <input type="email" class="form-control" name="email" value="{{row.1}}">
+
+               </div>
+
+               <div class="form-group">
+
+                  <label>phone no:</label>
+                  <input type="text" class="form-control" name="ph_no" value="{{row.2}}">
+
+               </div>
+
+
+               <div class="form-group">
+
+                  <button class="btn btn-primary" type="submit">Update</button>
+
+               </div>
+
+            </form>
+
+         </div>
+
+         <div class="modal-footer">
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+            {% endfor  %}
+              </table>
+              <button type="button" class="btn cancel,btn btn-secondary" onclick="closefacultyform()">Close</button>
+              </div><br><br>
+
+
+  <center><button class="btn btn-danger" onclick="opencourseform()" >Course details</button></center>
+
+              <div class="form-popup" id="course" style="display:none">
+               <h2>Course List <button type="button" class="btn btn-success " onclick="opencinsertform()" >Add Course Data</button></h2>
+
+              <div class="form-popup edit-popup" id="cinsertform">
+                <form action="{{url_for('cinsert')}}" class="form-container" enctype="multipart/form-data" method="post" >
+                  <label><b>Course Name:</b></label>
+                    <input type="text" class="input-sm" placeholder="Enter Coursename" name="courseid" required>
+                  <label ><b>Facultyname:</b></label>
+                  <select id="fid0" name="faculty">
+                    {% for d in fdata2 %}
+                         <option value="{{ d[0] }}">{{ d[0] }}</option>
+                       {% endfor %}</select>
+                  <button type="submit" class="btn">Insert</button>
+                  <button type="button" class="btn cancel" onclick="closecinsertform()">Close</button>
+                </form>
+              </div>
+              <table class="table table-striped">
+                      <tr>
+                          <th>Course Name</th>
+                          <th>Faculty Name</th>
+                          <th>Action</th>
+                      </tr>
+
+                   {% for row in coursedetail %}
+                <tr>
+                    <td>{{row.0}}</td>
+                    <td>{{row.1}}</td>
+                    <td>
+
+
+                <a  href="/cupdate{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
+                <a href="/cdelete/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+
+
+                    </td>
+
+                </tr>
+
+                <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
+
+
+   <div class="modal-dialog">
+
+      <div class="modal-content">
+
+         <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <h4 class="modal-title">Update Course Information</h4>
+
+         </div>
+
+         <div class="modal-body">
+
+            <form action="{{ url_for('cupdate') }}" method="POST">
+
+               <div class="form-group">
+
+                   <input type="hidden"  name="courseid" value="{{row.0}}">
+                    <label> Faculty Name:</label>
+                   <select id="fid" name="facultyname">
+                    {% for d in fdata2 %}
+                         <option value="{{ d[0] }}">{{ d[0] }}</option>
+                       {% endfor %}</select>
+
+               </div>
+
+
+               <div class="form-group">
+
+                  <button class="btn btn-primary" type="submit">Update</button>
+
+               </div>
+
+            </form>
+
+         </div>
+
+         <div class="modal-footer">
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+            {% endfor  %}
+
+              </table>
+              <button type="button" class="btn cancel,btn btn-secondary" onclick="closecourseform()">Close</button>
+              </div><br><br>
+
+
+
+
+  </body>
+
+  <script>
+  function openstudentform() {
+    document.getElementById("student").style.display = "block";
+  }
+
+  function closestudentform() {
+    document.getElementById("student").style.display = "none";
+  }
+
+  function openinsertform() {
+    document.getElementById("insertform").style.display = "block";
+  }
+  function closeinsertform() {
+    document.getElementById("insertform").style.display ="none";
+  }
+
+
+
+
+  function openfacultyform() {
+    document.getElementById("faculty").style.display = "block";
+  }
+
+  function closefacultyform() {
+    document.getElementById("faculty").style.display = "none";
+  }
+
+  function openfinsertform() {
+    document.getElementById("finsertform").style.display = "block";
+  }
+  function closefinsertform() {
+    document.getElementById("finsertform").style.display ="none";
+  }
+
+  function opencourseform() {
+    document.getElementById("course").style.display = "block";
+  }
+
+  function closecourseform() {
+    document.getElementById("course").style.display = "none";
+  }
+
+  function opencinsertform() {
+    document.getElementById("cinsertform").style.display = "block";
+  }
+  function closecinsertform() {
+    document.getElementById("cinsertform").style.display ="none";
+  }
+
+
+  </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+</html>

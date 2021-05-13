@@ -1,0 +1,63 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-size: cover;
+
+
+}
+.container1{
+    width: 100%;
+    height: 100vh;
+
+    background-image: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('E:/flask_demo/static/photos/image.jpg');
+    background-position: center;
+    background-size: cover;
+
+    box-sizing: border-box;
+}
+.row{
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+}
+.col{
+    flex-basis: 50%;
+
+}
+h1{
+    color: #fff;
+    font-size: 100px;
+}
+p{
+    color: #fff;
+    font-size: 11px;
+    line-height: 15px;
+}
+.card{
+    width: 200px;
+    height: 230px;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 15px 25px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin:10px 15px;
+    background-image: url(img/chintan_01.jpeg);
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.5s;
+}
+.card1{
+    background-image: url(img/meet_01.jpeg);
+}
+.card2{
+    background-image: url(img/chintan_01.jpeg);
+}
+.card3{
+    background-image: url(img/deep_04.jpeg);
+}
+.card:hover{
+    transform: translateY(-10px);
+}
